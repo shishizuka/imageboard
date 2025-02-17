@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import supabase from "../lib/supabase";
 
@@ -37,24 +36,55 @@ export default function Home() {
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-bold text-center mb-6">📜 Imageboard Forum</h1>
 
-      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <input type="text" placeholder="Thread Title" className="w-full p-2 border rounded mb-2" value={title} onChange={(e) => setTitle(e.target.value)} />
-        <textarea placeholder="Thread Description" className="w-full p-2 border rounded mb-2" value={description} onChange={(e) => setDescription(e.target.value)} />
-        <input type="file" className="w-full mb-2" onChange={(e) => setImage(e.target.files[0])} />
-        <button onClick={createThread} className="w-full bg-blue-500 text-white py-2 rounded">Post Thread</button>
+      {/* Create Thread Form */}
+      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md mt-8">
+        <input
+          type="text"
+          placeholder="Thread Title"
+          className="w-full p-3 border border-gray-300 rounded mt-4"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <textarea
+          placeholder="Thread Description"
+          className="w-full p-3 border border-gray-300 rounded mt-4"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <input
+          type="file"
+          className="w-full mt-4 text-sm"
+          onChange={(e) => setImage(e.target.files[0])}
+        />
+        <button
+          onClick={createThread}
+          className="w-full bg-blue-600 text-white py-3 rounded-lg mt-6 hover:bg-blue-700 transition-all"
+        >
+          Post Thread
+        </button>
       </div>
 
-      <div className="mt-6 space-y-4">
+      {/* Threads Display */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
         {threads.map((thread) => (
-          <Link href={`/thread/${thread.id}`} key={thread.id} className="block bg-white p-4 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold">{thread.title}</h2>
-            <p className="text-gray-600">{thread.description}</p>
-            {thread.image_url && <img src={thread.image_url} className="w-full mt-2 rounded" />}
-          </Link>
+          <a
+            href={`/thread/${thread.id}`}
+            key={thread.id}
+            className="block bg-white p-4 rounded-lg shadow-md hover:bg-gray-100 transition-all"
+          >
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-gray-800">{thread.title}</h2>
+              <span className="text-xs text-gray-500">
+                {new Date(thread.created_at).toLocaleDateString()}
+              </span>
+            </div>
+            <p className="text-gray-600 mt-2">{thread.description}</p>
+            {thread.image_url && (
+              <img src={thread.image_url} alt="Thread image" className="w-full mt-4 rounded-lg shadow-sm" />
+            )}
+          </a>
         ))}
       </div>
     </div>
   );
 }
-
-//retard
